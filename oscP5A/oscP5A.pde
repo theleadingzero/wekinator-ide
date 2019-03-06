@@ -12,16 +12,18 @@ PFont f;
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
+int counter = 0;
+
 void setup() {
-  size(500, 400);
+  size(550, 380);
 
   f = createFont("Courier", 16);
   textFont(f);
   textAlign(CENTER, CENTER);
 
   frameRate(25);
-  /* start oscP5, listening for incoming messages at port 12000 */
-  oscP5 = new OscP5(this, 12000);
+  /* start oscP5, listening for incoming messages at port 12005 */
+  oscP5 = new OscP5(this, 12005);
 
   /* myRemoteLocation is a NetAddress. a NetAddress takes 2 parameters,
    * an ip address and a port number. myRemoteLocation is used as parameter in
@@ -30,7 +32,7 @@ void setup() {
    * and the port of the remote location address are the same, hence you will
    * send messages back to this sketch.
    */
-  myRemoteLocation = new NetAddress("127.0.0.1", 12000);
+  myRemoteLocation = new NetAddress("127.0.0.1", 12005);
 }
 
 
@@ -39,14 +41,16 @@ void draw() {
 
   fill(255);
 
-  text("Click in this window to send an OSC message.", width/2, height/2);
+  text("Window A: Click in this window to send an OSC message.", width/2, height/2);
 }
 
 void mousePressed() {
   /* in the following different ways of creating osc messages are shown by example */
-  OscMessage myMessage = new OscMessage("/my-message");
+  OscMessage myMessage = new OscMessage("/windowA");
 
-  myMessage.add("some text"); /* add a string to the osc message */
+  String myMessageString = "message number " + counter;
+  counter++;
+  myMessage.add(myMessageString); /* add a string to the osc message */
   myMessage.add(123); /* add an int to the osc message */
   myMessage.add(12.34); /* add a float to the osc message */
 

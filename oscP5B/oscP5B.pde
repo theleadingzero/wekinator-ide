@@ -12,6 +12,8 @@ PFont f;
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
+String oscValue = "";
+
 void setup() {
   size(500, 400);
 
@@ -30,7 +32,7 @@ void setup() {
    * and the port of the remote location address are the same, hence you will
    * send messages back to this sketch.
    */
-  myRemoteLocation = new NetAddress("127.0.0.1", 12000);
+  myRemoteLocation = new NetAddress("127.0.0.1", 12002);
 }
 
 
@@ -39,20 +41,10 @@ void draw() {
 
   fill(0);
 
-  text("Click in this window to send an OSC message.", width/2, height/2);
+  text("Window B: Last message received", width/2, height/2);
+  text(oscValue, width/2, height/2+80 );
 }
 
-void mousePressed() {
-  /* in the following different ways of creating osc messages are shown by example */
-  OscMessage myMessage = new OscMessage("/my-message");
-
-  myMessage.add("some text"); /* add a string to the osc message */
-  myMessage.add(123); /* add an int to the osc message */
-  myMessage.add(12.34); /* add a float to the osc message */
-
-  /* send the message */
-  oscP5.send(myMessage, myRemoteLocation);
-}
 
 
 /* incoming osc message are forwarded to the oscEvent method. */
@@ -63,7 +55,7 @@ void oscEvent(OscMessage theOscMessage) {
   println(" typetag: "+theOscMessage.typetag());
   if (theOscMessage.checkTypetag("sif")) {
     /* parse theOscMessage and extract the values from the osc message arguments. */
-    String oscValue = theOscMessage.get(0).stringValue();  
+    oscValue = theOscMessage.get(0).stringValue();  
     println(" value: "+oscValue);
   }
 }
